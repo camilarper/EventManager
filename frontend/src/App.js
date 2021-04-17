@@ -6,6 +6,7 @@ import Home from './Home';
 import SignUp from './SignUp';
 import Organizations from './Organizations';
 import Universities from './Universities';
+import EventInfo from './EventInfo';
 import API from './API';
 
 function App() {
@@ -63,6 +64,7 @@ function Main(props) {
       <Route exact path="/SignUp" render={(p) => <SignUp {...p} setUser={props.setUser} register={true} />}/>
       <Route exact path="/LogIn" render={(p) => <SignUp {...p} setUser={props.setUser} register={false} />}/>
       <Route exact path="/Organizations" render={(p) => <Organizations {...p} user={props.user} />} />
+      <Route exact path="/EventInfo" render={(p) => <EventInfo {...p} user={props.user} />} />
     </Switch>
   );
 }

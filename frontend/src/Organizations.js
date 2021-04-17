@@ -11,6 +11,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import API from './API';
+import noevent2 from './noevent2.png';
+import noevent from './noevent.png';
 
 function Organizations() {
     const [events, setEvents] = useState([]);
@@ -35,7 +37,11 @@ function Organizations() {
 
     function doSearch(){
         const list = API.getEvents({univ, org, startDate, endDate, categ});
-        setEvents(list.map((item) => <Event key={item.id} data={item}/>));
+        setEvents(list.length ? list.map((item) => <Event key={item.id} data={item}/>) :
+        <div>
+        <img className="notFoundImg" src={noevent} alt="empty state" />
+        <h2 className="not-found">No match found</h2>
+        </div> );
     }
 
     const [inputFields, setInputFields] = useState([{ schoolEmail: '' }]);
@@ -102,7 +108,7 @@ function Organizations() {
                         
                         style={{
                             overlay: {backgroundColor: 'rgba(112,128,144,0.90)'},
-                            content: {height: '75%', width: '40%'}
+                            content: {height: '60%', width: '40%'}
                         }}>
                         <div className="modal-org">
                             <table className="table-new-org">
@@ -128,15 +134,15 @@ function Organizations() {
                                         <Form.Group as={Row}>
                                         <Col >
                                             <tr>
-                                                <td ><th>Members</th></td>
-                                                <td ><th>Admin</th></td>
+                                                <td ><th>Members (choose an administrator)</th></td>
                                             </tr>
                                             <tr>
                                             <div className="form-row">
                                                 {inputFields.map((inputField, index) => (
                                                     <Fragment key={`${inputField}~${index}`}>
                                                     <div className="form-group">
-                                                    <td><Form.Control id="schoolEmail" placeholder="Member's school email" /></td>
+                                                    <td><Form.Control id="memberName" placeholder="Member's Name" /></td>
+                                                    <td><Form.Control id="schoolEmail" placeholder="School email" /></td>
                                                     <td><Form.Check type="radio" name="formHorizontalRadios"/></td>
                                                     
                                                     <td>

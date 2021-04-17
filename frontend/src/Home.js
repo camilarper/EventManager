@@ -10,6 +10,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import API from './API';
+import Modal from 'react-modal'
+import noevent from './noevent.png';
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 
 function Home() {
     const [events, setEvents] = useState([]);
@@ -19,6 +22,8 @@ function Home() {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [categ, setCateg] = useState("");
+
+    const [modalIsOpen, setModalIsOpen] = useState(false)
 
     function getFormattedDate(date) {
         let year = date.getFullYear();
@@ -41,7 +46,11 @@ function Home() {
 
     function doSearch(){
         const list = API.getEvents({univ, org, startDate, endDate, categ});
-        setEvents(list.length ? list.map((item) => <Event key={item.id} data={item}/>) : <h2 className="not-found">No match found</h2> );
+        setEvents(list.length ? list.map((item) => <Event key={item.id} data={item}/>) :
+        <div>
+        <img className="notFoundImg" src={noevent} alt="empty state" />
+        <h2 className="not-found">No match found</h2>
+        </div> );
     }
 
     return(
@@ -93,7 +102,47 @@ function Home() {
                         </Card>
                     </div>
                     <button type="button" className="btn btn-primary btn-search" onClick={doSearch}>Search</button>
+                    <a type="button" className="btn btn-success btn-search" href="#" role="button" onClick={() => setModalIsOpen(true)}> Create New Event</a>
                 </Col>
+                <Modal isOpen={modalIsOpen} 
+                        shouldCloseOnOverlayClick={(true)} 
+                        onRequestClose={() => setModalIsOpen(false)}
+                        
+                        style={{
+                            overlay: {backgroundColor: 'rgba(112,128,144,0.90)'},
+                            content: {height: '75%', width: '80%'}
+                        }}>
+                        <div className="modal-org">
+                            <table className="table-new-event">
+                                <tbody>
+                                <tr><td>
+                                    <tr><th> New Event </th></tr>
+                                    <tr><Form.Control placeholder="Event Title" value={org}/></tr>
+                                    <tr>
+                                        <Form.Control as="select" value={categ} >
+                                            <option value="">Category</option>
+                                            {categList}
+                                        </Form.Control>
+                                    </tr>
+                                    <tr><Form.Control as="textarea"placeholder="Event Description" rows={3} /></tr>
+                                    <tr><Form.Control value={startDate}/></tr>
+                                    <tr><Form.Control placeholder="Event Time" value={org}/></tr>
+                                    <tr><br/></tr>
+                                    <tr><th> Contact Info: </th></tr>
+                                    <tr><Form.Control placeholder="Phone Number" value={org}/></tr>
+                                    <tr><Form.Control placeholder="Email Adress" value={org}/></tr>
+                                    
+                                    <tr><br/></tr>
+                                </td>
+                                <td>
+                                    
+                                <img className="notFoundImg" src={noevent} alt="empty state" />
+                                </td></tr>
+                                </tbody>
+                            </table>
+                            <button className="btn btn-primary btn-modal" onClick={() => setModalIsOpen(false)}> Close </button>
+                        </div>
+                    </Modal>
                 <Col sm={8} className = "col-results">
                     <div className="event-wrapper">
                         <h2> Upcoming Events </h2>

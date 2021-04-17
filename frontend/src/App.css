@@ -169,6 +169,11 @@ span.caret {
   width: 100%;
 }
 
+.table-new-event{
+    width: 100%;
+    table-layout : fixed;
+}
+
 .btn-modal{
   float:right;
 }
@@ -183,4 +188,10 @@ span.caret {
 
 .ReactModal__Content{
   margin: auto;
+}
+
+.notFoundImg{
+  width: 150px;
+  height: 150px;
+  margin-top: 5%;
 }
