@@ -165,8 +165,15 @@ span.caret {
   width:40vw;
 }
 
-.table-new-org{
+.table-new-org, .table-full{
   width: 100%;
+}
+.col50{
+  width:50%;
+}
+.table-new-event .form-control, .table-new-org .form-control {
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .table-new-event{
@@ -176,6 +183,11 @@ span.caret {
 
 .btn-modal{
   float:right;
+  margin: 5px;
+}
+
+.orgModal{
+  max-height: 80%;
 }
 
 .modal-org{

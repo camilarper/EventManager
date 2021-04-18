@@ -12,7 +12,7 @@ import Form from 'react-bootstrap/Form';
 import API from './API';
 import Modal from 'react-modal'
 import noevent from './noevent.png';
-import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
+//import MapPicker from 'react-google-map-picker'
 
 function Home() {
     const [events, setEvents] = useState([]);
@@ -23,7 +23,6 @@ function Home() {
     const [endDate, setEndDate] = useState("");
     const [categ, setCateg] = useState("");
 
-    const [modalIsOpen, setModalIsOpen] = useState(false)
 
     function getFormattedDate(date) {
         let year = date.getFullYear();
@@ -46,7 +45,7 @@ function Home() {
 
     function doSearch(){
         const list = API.getEvents({univ, org, startDate, endDate, categ});
-        setEvents(list.length ? list.map((item) => <Event key={item.id} data={item}/>) :
+        setEvents(list.length ? list.map((item) => <Event key={item.event_id} data={item}/>) :
         <div>
         <img className="notFoundImg" src={noevent} alt="empty state" />
         <h2 className="not-found">No match found</h2>
@@ -61,7 +60,7 @@ function Home() {
                     <div className="cardDiv card-elevation3">
                         <Card>
                         <Card.Body>
-                        <table>
+                        <table className="table-full">
                             <tbody>
                             <tr>
                                 <th>University: </th>
@@ -88,7 +87,7 @@ function Home() {
                                 </td>
                             </tr>
                             <tr>
-                                <th>Category: </th>
+                                <th>Event Type: </th>
                                 <td>
                                     <Form.Control as="select" value={categ} onChange={(x) => setCateg(x.target.value)}>
                                         <option value="">All</option>
@@ -102,47 +101,7 @@ function Home() {
                         </Card>
                     </div>
                     <button type="button" className="btn btn-primary btn-search" onClick={doSearch}>Search</button>
-                    <a type="button" className="btn btn-success btn-search" href="#" role="button" onClick={() => setModalIsOpen(true)}> Create New Event</a>
                 </Col>
-                <Modal isOpen={modalIsOpen} 
-                        shouldCloseOnOverlayClick={(true)} 
-                        onRequestClose={() => setModalIsOpen(false)}
-                        
-                        style={{
-                            overlay: {backgroundColor: 'rgba(112,128,144,0.90)'},
-                            content: {height: '75%', width: '80%'}
-                        }}>
-                        <div className="modal-org">
-                            <table className="table-new-event">
-                                <tbody>
-                                <tr><td>
-                                    <tr><th> New Event </th></tr>
-                                    <tr><Form.Control placeholder="Event Title" value={org}/></tr>
-                                    <tr>
-                                        <Form.Control as="select" value={categ} >
-                                            <option value="">Category</option>
-                                            {categList}
-                                        </Form.Control>
-                                    </tr>
-                                    <tr><Form.Control as="textarea"placeholder="Event Description" rows={3} /></tr>
-                                    <tr><Form.Control value={startDate}/></tr>
-                                    <tr><Form.Control placeholder="Event Time" value={org}/></tr>
-                                    <tr><br/></tr>
-                                    <tr><th> Contact Info: </th></tr>
-                                    <tr><Form.Control placeholder="Phone Number" value={org}/></tr>
-                                    <tr><Form.Control placeholder="Email Adress" value={org}/></tr>
-                                    
-                                    <tr><br/></tr>
-                                </td>
-                                <td>
-                                    
-                                <img className="notFoundImg" src={noevent} alt="empty state" />
-                                </td></tr>
-                                </tbody>
-                            </table>
-                            <button className="btn btn-primary btn-modal" onClick={() => setModalIsOpen(false)}> Close </button>
-                        </div>
-                    </Modal>
                 <Col sm={8} className = "col-results">
                     <div className="event-wrapper">
                         <h2> Upcoming Events </h2>
@@ -158,12 +117,15 @@ function Event({data}) {
     return(
         <div className="cardDiv card-elevation3">
             <Card>
-            <Card.Header as="h5">{data.title}</Card.Header>
+            <Card.Header as="h5">{data.event_name}</Card.Header>
             <Card.Body>
                 {/*<Card.Title>Subtitle</Card.Title>*/}
                 <Card.Text>
-                Event location: -
-                {data.location}
+                Location: {data.loc.location_name}
+                <br/>
+                {/*<div dangerouslySetInnerHTML={{ __html:data.description}} />*/}
+                Event Date: -
+                {data.date}
                 <a type="button" className="btn btn-primary cardbtn" href="/EventInfo"> Event Details </a>
                 </Card.Text>
             </Card.Body>

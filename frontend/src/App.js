@@ -36,8 +36,8 @@ function HomeNavbar(props) {
         <ul className="navbar-nav mr-auto">
           <span className="navbar-brand text-white">Event Manager</span>
           <li className="nav-item"><NavLink exact className="nav-link" activeClassName="active" to="/">Events</NavLink></li>
-          <li className="nav-item"><NavLink exact className="nav-link" activeClassName="active" to="/Organizations">Organizations</NavLink></li>
-          {props.user.isSuperAdmin?<li className="nav-item"><NavLink exact className="nav-link" activeClassName="active" to="/Universities">Universities</NavLink></li>:""}
+          {props.user.user_id?<li className="nav-item"><NavLink exact className="nav-link" activeClassName="active" to="/Organizations">Organizations</NavLink></li>:""}
+          {props.user.user_type?<li className="nav-item"><NavLink exact className="nav-link" activeClassName="active" to="/Universities">Universities</NavLink></li>:""}
         </ul>
         {
           props.user.name ?

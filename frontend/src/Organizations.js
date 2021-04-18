@@ -11,33 +11,43 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import API from './API';
-import noevent2 from './noevent2.png';
 import noevent from './noevent.png';
 
-function Organizations() {
-    const [events, setEvents] = useState([]);
-    const [categList, setCategList] = useState([]);
-    const [univ, setUniv] = useState("");
+function Organizations(props) {
+    const [orgList, setOrgList] = useState([]);
+    const [univ, setUniv] = useState({});
     const [org, setOrg] = useState("");
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [categ, setCateg] = useState("");
+    const [myOrg, setMyOrg] = useState(true);
     
-    const [modalIsOpen, setModalIsOpen] = useState(false)
+    const [modalOrgIsOpen, setModalOrgIsOpen] = useState(false);
+    const [modalEventIsOpen, setModalEventIsOpen] = useState(false);
+    
+    const emptyEvent = { rso_id: 0, event_name: '', event_type: '', category:'', description: '', date: '', contact_phone: '', contact_email: '' , latitude: '' , longitude: '' , locationName: '' }
+    const [newEvent, setNewEvent] = useState(emptyEvent) 
+    
+    function handleNewEventChange(event) { 
+        setNewEvent({...newEvent, [event.target.name]: event.target.value})
+    }    
+    function handleOrgOpenModal(org_id) { 
+        setNewEvent({...newEvent, rso_id: org_id})
+        setModalEventIsOpen(true)
+    }
+
+    function createEvent(){
+        API.createEvent(newEvent);
+    }
 
     useEffect(() => {
-        API.getCategories().then(
+        API.getUserInfo(props.user.user_id).then(
             (resp) => { 
-                setCategList(resp.map((x, i) => <option key={i} value={x}>{x}</option>));
-                var date = new Date();
-                date.setDate(date.getDate() + 1);
+                setUniv(resp.univ)
                 doSearch();
             });
     }, [])
 
     function doSearch(){
-        const list = API.getEvents({univ, org, startDate, endDate, categ});
-        setEvents(list.length ? list.map((item) => <Event key={item.id} data={item}/>) :
+        const list = API.getOrgs({org, myOrg, user_id: props.user.user_id});
+        setOrgList(list.length ? list.map((item) => <Orgs key={item.rso_id} data={item} openModal={() => handleOrgOpenModal(item.rso_id)}/>) :
         <div>
         <img className="notFoundImg" src={noevent} alt="empty state" />
         <h2 className="not-found">No match found</h2>
@@ -66,7 +76,7 @@ function Organizations() {
                     <div className="cardDiv card-elevation3">
                         <Card>
                         <Card.Body>
-                        <table>
+                        <table className="table-full">
                             <tbody>
                             <tr>
                                 <th>Organization: </th>
@@ -74,20 +84,13 @@ function Organizations() {
                                     <Form.Control placeholder="Name" value={org} onChange={(x) => setOrg(x.target.value)}/>
                                 </td>
                             </tr>
-                            <tr>
-                                <th>Category: </th>
-                                <td>
-                                    <Form.Control as="select" value={categ} onChange={(x) => setCateg(x.target.value)}>
-                                        <option value="">All</option>
-                                        {categList}
-                                    </Form.Control>
-                                </td>
-                            </tr>
-                            <label></label>
+                            <tr></tr>
                             <tr>
                                 <th> </th><td>
                                 <Form>
                                     <Form.Check 
+                                        onChange={(x) => setMyOrg(x.target.checked)}
+                                        checked={myOrg}
                                         type="switch"
                                         id="custom-switch"
                                         label="My Organizations Only"
@@ -100,88 +103,121 @@ function Organizations() {
                         </Card>
                     </div>
                     <button type="button" className="btn btn-primary btn-search" onClick={doSearch}>Search</button>
-                    <a type="button" className="btn btn-success btn-search" href="#" role="button" onClick={() => setModalIsOpen(true)}> Register a new Organization</a>
-                </Col>
-                    <Modal isOpen={modalIsOpen} 
-                        shouldCloseOnOverlayClick={(true)} 
-                        onRequestClose={() => setModalIsOpen(false)}
-                        
-                        style={{
-                            overlay: {backgroundColor: 'rgba(112,128,144,0.90)'},
-                            content: {height: '60%', width: '40%'}
-                        }}>
-                        <div className="modal-org">
-                            <table className="table-new-org">
-                                <tbody>
-                                <tr>
-                                    <th> New Organization </th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <Form.Control placeholder="Organization Name" value={org}/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <Form.Control as="textarea"placeholder="Organization Purpose" rows={3} />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <label> </label>
-                                </tr>
-                                <tr>
-                                    <fieldset>
-                                        <Form.Group as={Row}>
-                                        <Col >
-                                            <tr>
-                                                <td ><th>Members (choose an administrator)</th></td>
-                                            </tr>
-                                            <tr>
-                                            <div className="form-row">
-                                                {inputFields.map((inputField, index) => (
-                                                    <Fragment key={`${inputField}~${index}`}>
-                                                    <div className="form-group">
-                                                    <td><Form.Control id="memberName" placeholder="Member's Name" /></td>
-                                                    <td><Form.Control id="schoolEmail" placeholder="School email" /></td>
-                                                    <td><Form.Check type="radio" name="formHorizontalRadios"/></td>
-                                                    
-                                                    <td>
-                                                        <div className="form-group">
-                                                            <td><button className="btn btn-link" type="button" onClick={() => handleRemoveFields(index)}>
-                                                            -
-                                                            </button></td>
-                                                            <td><button className="btn btn-link" type="button" onClick={() => handleAddFields()}>
-                                                            +
-                                                            </button></td>
-                                                        </div>
-                                                    </td>
-                                                    </div>
-                                                </Fragment>)) }
-                                            </div></tr>
-                                        </Col>
-                                        </Form.Group>
-                                    </fieldset>
-                                </tr>
-                                <tr>
-                                <br/>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <button className="btn btn-primary btn-modal" onClick={() => setModalIsOpen(false)}> Close </button>
-                        </div>
-                    </Modal>
+                    <a type="button" className="btn btn-success btn-search" href="#" role="button" onClick={() => setModalOrgIsOpen(true)}> Register a new Organization</a>
+                </Col>                         
                 <Col sm={8} className = "col-results">
                     <div className="event-wrapper">
-                        <h2> Organizations at "their school name" </h2>
-                        {events}
+                        <h2> Organizations at {univ.uni_name} </h2>
+                        {orgList}
                     </div>
                 </Col>
             </Row>
+
+            <Modal isOpen={modalOrgIsOpen} 
+                        shouldCloseOnOverlayClick={(true)} 
+                        onRequestClose={() => setModalOrgIsOpen(false)}
+                        
+                        style={{
+                            overlay: {backgroundColor: 'rgba(112,128,144,0.90)'},
+                            content: {height: '80%', width: '40%'}
+                        }}>
+                        <div className="modal-org">
+                            <Form className="table-new-org">
+                                <div>
+                                    New Organization
+                                </div>
+                                <Form.Control placeholder="Organization Name" value={org}/>
+                                <Form.Control as="textarea"placeholder="Organization Purpose" rows={3} />
+                                <fieldset>
+                                        <Form.Group as={Row}>
+                                        <Col >
+                                            Members (choose an administrator)
+                                                {inputFields.map((inputField, index) => (
+                                                <Fragment key={`${inputField}~${index}`}>
+                                                <Form.Row>
+                                                    <Form.Group as={Col} controlId="orgMember">
+                                                        <Form.Control id="userSchoolEmail" placeholder="Member's email (school)" />
+                                                    </Form.Group>
+                                                    <Form.Group controlId="orgAdmin">
+                                                        <Form.Check type="radio" name="formHorizontalRadios"/>
+                                                    </Form.Group>
+                                                    <Form.Group >
+                                                        <button className="btn btn-primary btn-modal" type="button" onClick={() => handleAddFields()}>
+                                                            +
+                                                        </button>
+                                                        <button className="btn btn-primary btn-modal" type="button" onClick={() => handleRemoveFields(index)}>
+                                                            -
+                                                        </button>
+                                                    </Form.Group>
+                                                </Form.Row>
+                                                </Fragment>)) }
+                                        </Col>
+                                        </Form.Group>
+                                </fieldset>
+                            </Form>
+                            <button className="btn btn-primary btn-modal" onClick={() => setModalOrgIsOpen(false)}> Close </button>
+                        </div>
+                    </Modal>
+                    
+
+            <Modal isOpen={modalEventIsOpen} 
+                        shouldCloseOnOverlayClick={(true)} 
+                        onRequestClose={() => setModalEventIsOpen(false)}
+                        ariaHideApp={false}
+                        style={{
+                            overlay: {backgroundColor: 'rgba(112,128,144,0.90)'},
+                            content: {height: '85%', width: '80%'}
+                        }}>
+                        <div className="modal-org">
+                            <table className="table-new-event">
+                                <tbody>
+                                <tr><td className="col50">
+                                    <div> New Event </div>
+                                    
+                                    <Form.Control name="event_name" placeholder="Event Title" value={newEvent.event_name} onChange={handleNewEventChange}/>
+                                    <Form.Control name="event_type" placeholder="Event Type" value={newEvent.event_type} onChange={handleNewEventChange}/>
+                                    <Form.Control name="category" placeholder="Category" value={newEvent.category} onChange={handleNewEventChange}/>
+                                    <Form.Control name="description" as="textarea" placeholder="Event Description" rows={3} value={newEvent.description} onChange={handleNewEventChange}/>
+                                    <Form.Control name="date" placeholder="Event Date" value={newEvent.eventdate} onChange={handleNewEventChange}/>
+                                    <br/>
+                                    <div> Location: </div>
+                                    <Form.Control name="locationName" placeholder="Location Name" value={newEvent.locationName} onChange={handleNewEventChange}/>
+                                    <Form.Row>
+                                        <Form.Group as={Col} controlId="formLocation">
+                                        <Form.Control name="latitude" placeholder="latitude" value={newEvent.latitude} onChange={handleNewEventChange}/>
+                                        </Form.Group>
+
+                                        <Form.Group as={Col} controlId="formLocation">
+                                        <Form.Control name="longitude" placeholder="longitude" value={newEvent.longitude} onChange={handleNewEventChange}/>
+                                        </Form.Group>
+                                    </Form.Row>
+                                    
+                                    <div> Contact Info: </div>
+                                    <Form.Row>
+                                        <Form.Group as={Col} controlId="formLocation">
+                                        <Form.Control name="contact_phone" placeholder="Phone Number" value={newEvent.contact_phone} onChange={handleNewEventChange}/>
+                                        </Form.Group>
+
+                                        <Form.Group as={Col} controlId="formLocation">
+                                        <Form.Control name="contact_email" placeholder="Email Adress" value={newEvent.contact_email} onChange={handleNewEventChange}/>
+                                        </Form.Group>
+                                    </Form.Row>
+                                    
+                                </td>
+                                <th> TBA</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button className="btn btn-primary btn-modal" onClick={createEvent}> Create </button>
+                            <button className="btn btn-primary btn-modal" onClick={() => setModalEventIsOpen(false)}> Cancel </button>
+                        </div>
+                    </Modal>
+                
         </Container>
     );
 }
 
-function Event({data}) {
+function Orgs({data, openModal}) {
     return(
         <div className="cardDiv card-elevation3">
             <Card>
@@ -191,6 +227,7 @@ function Event({data}) {
                 <Card.Text>
                 Short organization information
                 <button type="button" className="btn btn-success cardbtn">Join</button>
+                <button type="button" className="btn btn-success cardbtn" onClick={openModal}> Create New Event</button>
                 </Card.Text>
             </Card.Body>
             </Card>
