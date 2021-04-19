@@ -132,13 +132,13 @@ function API() {
     }
 
     async function authenticate(user){
-        return axios.post(api_url + "authenticate", user);
+        return axios.get(api_url + "authenticate", user);
         // window.db.currentUser = window.db.User.find(x => matches(x.username, credentials.username) && x.user_pw === credentials.user_pw);
         // return window.db.currentUser;
     }
 
     async function register(user){   
-        return axios.post(api_url + "create-account", user);
+        return axios.post(api_url + "create-account", {...user, user_type: 0});
         
         // var newUser = { ...user, user_id: window.db.User.length + 1, user_type: 0};
         // window.db.User.push(newUser);

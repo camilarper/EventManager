@@ -42,7 +42,7 @@ function HomeNavbar(props) {
         {
           props.user.name ?
           <ul className="navbar-nav ml-auto">
-            <li className="navbar-brand text-white">{props.user.name}</li>
+            <li className="navbar-brand text-white">{props.user.full_name}</li>
             <li className="nav-item"><a className="nav-link" href="javascript:void(null);" onClick={logOut}>Log out</a></li>
           </ul>
           :

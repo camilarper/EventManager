@@ -9,7 +9,7 @@ import API from './API';
 
 
 function Signup(props) {
-    const initialState = { username: '', user_pw: '', name: '', university_id: '', email: '' }
+    const initialState = { username: '', user_pw: '', full_name: '', university_id: '', email: '' }
     const [User, setSignup] = useState(initialState) 
     const [uniList, setUniList] = useState([]);
 
@@ -75,7 +75,7 @@ function Signup(props) {
                                 <div className="col control-label ">
                                     {props.register?
                                     <div>
-                                        <Form.Control name="name" placeholder="Your name" rows="1" value={setSignup.content} onChange={handleChange} className="form-control" />
+                                        <Form.Control name="full_name" placeholder="Your name" rows="1" value={setSignup.content} onChange={handleChange} className="form-control" />
                                         <br/>
                                         <Form.Control as="select" name="university_id" value={setSignup.content} onChange={handleChange}  className="form-control">
                                             <option value="">Select University</option>

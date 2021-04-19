@@ -43,3 +43,14 @@ router.get('/get-user-events', controller.get_user_events);
 // for someone who is not logged in, get all public events
 
 router.get('/get-public-events', controller.get_public_events);
+
+router.get('/get-universities', controller.get_universities);
+
+router.get('/get-university', controller.get_university);
+
+router.get('/get-university-users', controller.get_uiversity_users);
+
+router.post('/create-event', controller.create_event_with_rso);
+
+
+module.exports = router;
