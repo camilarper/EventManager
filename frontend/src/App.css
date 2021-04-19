@@ -211,3 +211,9 @@ span.caret {
   height: 150px;
   margin-top: 5%;
 }
+.infoCard{
+  height:90%;
+}
+.infoCardContent{
+  height:100%;
+}

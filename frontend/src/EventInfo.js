@@ -25,19 +25,25 @@ function EventInfo(props) {
         <Container fluid>
         <Row className="event-page">
             <Col sm={6} className = "col-filter">
-                <h1>{event.event_name} </h1>
-                <p><div dangerouslySetInnerHTML={{ __html:event.description}} /></p>
-                <p><b>Date and Time:</b> {event.date} </p>
-                {event.location?
-                <p><b>Location:</b>  {event.location.location_name} </p>:""}
-                <p><b>Contact Information:</b> {event.contact_email} , {event.contact_phone}</p>
+                <div className="cardDiv card-elevation3 infoCard">
+                    <Card className="infoCardContent">
+                        <Card.Header><h1>{event.event_name} </h1></Card.Header>
+                    <Card.Body>
+                        <p><div dangerouslySetInnerHTML={{ __html:event.description}} /></p>
+                        <p><b>Date and Time:</b> {event.date} </p>
+                        {event.location?
+                        <p><b>Location:</b>  {event.location.location_name} </p>:""}
+                        <p><b>Contact Information:</b> {event.contact_email} , {event.contact_phone}</p>
+                    </Card.Body>
+                    </Card>
+                </div>
              </Col>
             
             <Col sm={6} className = "col-results">
                 <div className="event-wrapper">
-                    <h2> Reviews </h2>
-                    <div className="cardDiv card-elevation3">
-                    <Card>
+                    <div className="cardDiv card-elevation3 infoCard">
+                    <Card className="infoCardContent">
+                    <Card.Header><h2> Reviews </h2></Card.Header>
                     <Card.Body>
                         <ChatBox/>
                     </Card.Body>

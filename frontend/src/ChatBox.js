@@ -49,9 +49,9 @@ class ChatBox extends Component {
 
   render() {
     return (
-      <div >
+      <div className="infoCardContent">
 
-        <div className="row">
+        <div className="row infoCardContent">
           <div className="col-4  pt-3 border-right">
             <h6>Say something about Event</h6>
             <CommentForm addComment={this.addComment} />
