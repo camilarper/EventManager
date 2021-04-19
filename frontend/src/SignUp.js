@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
 import {NavLink} from 'react-router-dom';
 import './App.css';
 import 'react-bootstrap';
@@ -8,9 +9,17 @@ import API from './API';
 
 
 function Signup(props) {
-    const initialState = { username: '', user_pw: '', full_name: '', uni_name: '', email: '' }
+    const initialState = { username: '', user_pw: '', name: '', university_id: '', email: '' }
     const [User, setSignup] = useState(initialState) 
-    
+    const [uniList, setUniList] = useState([]);
+
+    useEffect(() => {
+        API.getUniversities().then(
+            (resp) => { 
+                setUniList(resp.map((x, i) => <option key={i} value={x.university_id}> {x.uni_name} </option>));
+            });
+    }, [])
+
     function handleChange(event) { 
         setSignup({...User, [event.target.name]: event.target.value})
     }
@@ -19,13 +28,31 @@ function Signup(props) {
         event.preventDefault();
         let action = props.register ? API.register : API.authenticate;
         action(User).then(x => {
-            if (x) {
+            if (x && x.user_id) {
                 props.setUser(x);
                 props.history.push('/');
             } else {
                 console.log("Error Authenticating " + User)
             }
         });
+        // props.register 
+        // ? axios.post("http://ec2-54-234-164-147.compute-1.amazonaws.com:3000/create-account", User)
+        //     .then((response)=>{
+        //         console.log(response.data);
+        //         props.setUser(response.data);
+        //         props.history.push('/');
+        //     }, (error)=> {
+        //         console.log(error);
+        //     }) 
+        // : axios.post("http://ec2-54-234-164-147.compute-1.amazonaws.com:3000/authenticate", User) 
+        //     .then((response)=>{
+        //         console.log(response);
+        //         props.setUser(response.data);
+        //         props.history.push('/');
+        //     }, (error)=> {
+        //         console.log(error);
+        //     }) ;
+        
     }
     
     return (
@@ -48,9 +75,12 @@ function Signup(props) {
                                 <div className="col control-label ">
                                     {props.register?
                                     <div>
-                                        <Form.Control name="full_name" placeholder="Your name" rows="1" value={setSignup.content} onChange={handleChange} className="form-control" />
+                                        <Form.Control name="name" placeholder="Your name" rows="1" value={setSignup.content} onChange={handleChange} className="form-control" />
                                         <br/>
-                                        <Form.Control name="uni_name" placeholder="University name" rows="1" value={setSignup.content} onChange={handleChange} className="form-control" />
+                                        <Form.Control as="select" name="university_id" value={setSignup.content} onChange={handleChange}  className="form-control">
+                                            <option value="">Select University</option>
+                                            {uniList}
+                                        </Form.Control>
                                         <br/>
                                         <Form.Control name="email" placeholder="School email" rows="1" value={setSignup.content} onChange={handleChange} className="form-control" />
                                         <br/>                                       

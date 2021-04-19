@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { get } from 'axios';
+import axios from 'axios';
 
 if (!window.db) {
     window.db = {
@@ -61,18 +61,20 @@ if (!window.db) {
             rso_id: 1,
             university_id: 1,
             rso_name: "Delta Sigma Phi",
-            admin_id: 3
+            admin_id: 3,
+            description:"description Delta",
         },{
             rso_id: 2,
             university_id: 2,
             rso_name: "ZBT",
             admin_id: 4,
+            description:"description ZBT",
         },{
             rso_id: 3,
             university_id: 3,
             rso_name: "SHPE",
             admin_id: 1,
-
+            description:"description SHPE",
         }],
 
         RSO_Member: [{
@@ -114,6 +116,8 @@ if (!window.db) {
 }
 
 function API() {
+    const api_url = "http://ec2-54-234-164-147.compute-1.amazonaws.com:3000/";
+
     function matches(str1, str2){
         return str1 && str2 && str1.toLowerCase()==str2.toLowerCase();
     }
@@ -127,15 +131,28 @@ function API() {
         return new Date(date1) - new Date(date2);
     }
 
-    async function authenticate(credentials){
-        window.db.currentUser = window.db.User.find(x => matches(x.username, credentials.username) && x.user_pw === credentials.user_pw);
-        return window.db.currentUser;
+    async function authenticate(user){
+        return axios.post(api_url + "authenticate", user);
+        // window.db.currentUser = window.db.User.find(x => matches(x.username, credentials.username) && x.user_pw === credentials.user_pw);
+        // return window.db.currentUser;
     }
 
-    async function register(user){
-        window.db.User.push(user);
-        window.db.currentUser = user;
-        return user;
+    async function register(user){   
+        return axios.post(api_url + "create-account", user);
+        
+        // var newUser = { ...user, user_id: window.db.User.length + 1, user_type: 0};
+        // window.db.User.push(newUser);
+        // window.db.currentUser = newUser;
+        // return newUser;
+    }
+
+    async function joinRso(rso_member){
+        return axios.post(api_url + "add_user_to_rso", rso_member);
+        //window.db.RSO_Member.push({...rso_member, rso_member_id: window.db.RSO_Member.length + 1})
+    }
+
+    async function getUsersFromUni(university_id){
+        return window.db.User.filter(x => x.university_id == university_id);
     }
     
     async function createEvent(event) {
@@ -156,8 +173,32 @@ function API() {
         window.db.Event.push(fullEvent);
         return fullEvent;
     }
+    
+    async function createOrg(org, members, univ_id) {
+        var admin = members.find(x => x.isAdmin);
+        
+        var fullOrg = {
+            ...org, 
+            rso_id: window.db.RSO.length + 1,
+            admin_id: admin.user_id,
+            university_id: univ_id
+        };
+        members.forEach(x => window.db.RSO_Member.push({
+            rso_member_id: window.db.RSO_Member.length + 1,
+            user_id: x.user_id,
+            rso_id: fullOrg.rso_id
+        }));
 
-    function getEvents(filter){
+        window.db.RSO.push(fullOrg);
+        return fullOrg;
+    }
+
+        async function createUni(newUni) {
+        
+        return [];
+    }
+
+    async function getEvents(filter){
         var result = window.db.Event.filter(evt => {
             var rso = window.db.RSO[evt.rso_id - 1];
             var univ = window.db.University[rso.university_id - 1];
@@ -191,7 +232,7 @@ function API() {
             return true;
         });
         return result.map(x => {            
-                var location = window.db.Location[x.location_id];
+                var location = window.db.Location[x.location_id - 1];
                 return {...x, loc:location};
         });
     }
@@ -200,20 +241,48 @@ function API() {
         await loadData();
         return window.db.Event_types;
     }
-
-    async function getUserInfo(){
-        return {univ: window.db.University[0]};
+    
+    async function getUniversities(){
+        await loadData();
+        return window.db.University;
     }
 
-    async function getOrgs(){
-        return [];
+    async function getUniversity(university_id){
+        return window.db.University[university_id - 1];
+    }
+    async function getUser(user_id){
+        return window.db.User[user_id - 1];
+    }
+    // async function getOrganization(rso_id){
+    //     return window.db.RSO[rso_id - 1];
+    // }
+
+    async function getOrgs(filter){
+        var user = await getUser(filter.user_id);
+        var myOrgs = {};
+        window.db.RSO_Member.forEach(x => {
+            if (x.user_id == filter.user_id)
+                myOrgs[x.rso_id] = true;
+        });
+        var result = window.db.RSO.filter(rso => {
+            if (rso.university_id != user.university_id)
+                return false;
+            if (filter.org && !isContained(rso.rso_name, filter.org))
+                return false;
+            if (filter.myOrg && !myOrgs[rso.rso_id])
+                return false;
+            return true;
+        });
+        return result.map(x => {
+            return {...x, isAdmin: x.admin_id == filter.user_id, isMember: myOrgs[x.rso_id] };
+        });
     }
 
     async function loadData(){
         if (!window.db.loaded)
         {
             try {
-                const response = await get('https://events.ucf.edu/feed.json');
+                const response = await axios.get('https://events.ucf.edu/feed.json');
                 var evt_type = { };
                 window.db.Event = response.data.map((x, i) => {
                     var org = window.db.RSO[i % 3];
@@ -245,12 +314,22 @@ function API() {
 
     return {
         loadData,
-        getEvents,
-        getCategories,
         authenticate,
         register,
-        getUserInfo,
-        getOrgs
+        createEvent,
+        createOrg,
+        createUni,
+        joinRso,
+
+        getEvents,
+        getCategories,
+        getOrgs,
+        getUniversities,
+        getUsersFromUni,
+        
+        //getUser,
+        getUniversity,
+        //getOrganization
     }
 }
 

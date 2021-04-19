@@ -9,14 +9,18 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import ChatBox from './ChatBox'
 
 function EventInfo() {
     return(
         <Container fluid>
         <Row className="event-page">
             <Col sm={6} className = "col-filter">
-                <h2> Event Title </h2>
-                
+                <h1> Event Title </h1>
+                <p>Event Description</p>
+                <p>Date and Time: </p>
+                <p>Location: </p>
+                <p>Contact Information: </p>
              </Col>
             
             <Col sm={6} className = "col-results">
@@ -25,13 +29,7 @@ function EventInfo() {
                     <div className="cardDiv card-elevation3">
                     <Card>
                     <Card.Body>
-                    <table>
-                        <tbody>
-                        <tr>
-                           
-                        </tr>
-                        </tbody>
-                    </table>
+                        <ChatBox/>
                     </Card.Body>
                     </Card>
                 </div>

@@ -14,7 +14,7 @@ import Modal from 'react-modal'
 import noevent from './noevent.png';
 //import MapPicker from 'react-google-map-picker'
 
-function Home() {
+function Home(props) {
     const [events, setEvents] = useState([]);
     const [categList, setCategList] = useState([]);
     const [univ, setUniv] = useState("");
@@ -44,12 +44,14 @@ function Home() {
     }, [])
 
     function doSearch(){
-        const list = API.getEvents({univ, org, startDate, endDate, categ});
-        setEvents(list.length ? list.map((item) => <Event key={item.event_id} data={item}/>) :
-        <div>
-        <img className="notFoundImg" src={noevent} alt="empty state" />
-        <h2 className="not-found">No match found</h2>
-        </div> );
+        API.getEvents({user: props.user, univ, org, startDate, endDate, categ}).then(
+            (list) => {
+                setEvents(list.length ? list.map((item) => <Event key={item.event_id} data={item}/>) :
+                <div>
+                <img className="notFoundImg" src={noevent} alt="empty state" />
+                <h2 className="not-found">No match found</h2>
+                </div> );
+            });
     }
 
     return(
