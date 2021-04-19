@@ -128,7 +128,7 @@ function Event({data}) {
                 {/*<div dangerouslySetInnerHTML={{ __html:data.description}} />*/}
                 Event Date: -
                 {data.date}
-                <a type="button" className="btn btn-primary cardbtn" href="/EventInfo"> Event Details </a>
+                <a type="button" className="btn btn-primary cardbtn" href={"/EventInfo/"+ data.event_id}> Event Details </a>
                 </Card.Text>
             </Card.Body>
             </Card>

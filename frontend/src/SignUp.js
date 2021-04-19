@@ -26,6 +26,7 @@ function Signup(props) {
     
     function handleSubmit(event) { 
         event.preventDefault();
+        
         let action = props.register ? API.register : API.authenticate;
         action(User).then(x => {
             if (x && x.user_id) {

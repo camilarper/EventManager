@@ -100,7 +100,7 @@ export default class CommentForm extends Component {
               onChange={this.handleFieldChange}
               value={this.state.comment.name}
               className="form-control"
-              placeholder="😎 Your Name"
+              placeholder=" Your Name"
               name="name"
               type="text"
             />
@@ -111,7 +111,7 @@ export default class CommentForm extends Component {
               onChange={this.handleFieldChange}
               value={this.state.comment.message}
               className="form-control"
-              placeholder="🤬 Your Comment"
+              placeholder=" Your Comment"
               name="message"
               rows="5"
             />

@@ -22,56 +22,38 @@ function Universities(props) {
     const emptyUni = { university_id: 0, uni_name: '', location_id: '', description:''}
     const [newUni, setNewUni] = useState(emptyUni);
 
-    function doSearch(){
-        API.getOrgs({uni, user_id: props.user.user_id}).then(
-            (list) => {
-                setUniList(list.length ? list.map((item) => <Uni key={item.rso_id} data={item} openModal={() => openModal(item.rso_id)}/>) :
+    useEffect(() => {
+        loadUniversities();
+    }, [])
+
+    function loadUniversities(){
+        setNewUni(emptyUni);
+        API.getUniversities().then(
+            (list) => { 
+                setUniList(list.length ? list.map((item) => <Uni key={item.university_id} data={item}/>) :
                 <div>
                 <img className="notFoundImg" src={noevent} alt="empty state" />
-                <h2 className="not-found">No match found</h2>
+                <h2 className="not-found">No Universities in the Database</h2>
                 </div> );
-            }
-        );        
+            });  
     }
     function createUni(){
         API.createUni(newUni).then(() => {
             setModalIsOpen(false)
-            doSearch()
+            loadUniversities()
         });
     }
-    function openModal(org_id) { 
-        setNewUni({...emptyUni})
-        setModalIsOpen(true)
-    }
-
+    function handleNewUniChange(event) { 
+        setNewUni({...newUni, [event.target.name]: event.target.value})
+    } 
     
     return(
         <Container fluid>
             <Row className="event-page">
-                <Col sm={4} className = "col-filter">
-                    <h2> Filter by </h2>
-                    <div className="cardDiv card-elevation3">
-                        <Card>
-                        <Card.Body>
-                        <table className="table-full">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <Form.Control placeholder="Name" value={uni} onChange={(x) => setUni(x.target.value)}/>
-                                </td>
-                            </tr>
-                            <tr></tr>
-                            </tbody>
-                        </table>
-                        </Card.Body>
-                        </Card>
-                    </div>
-                    <button type="button" className="btn btn-primary btn-search" onClick={doSearch}>Search</button>
-                    <a type="button" className="btn btn-success btn-search" href="#" role="button" onClick={() => setModalIsOpen(true)}> Create new University</a>
-                </Col>                         
-                <Col sm={8} className = "col-results">
+                                   
+                <Col className = "col-results">
                     <div className="event-wrapper">
-                        <h2> Universities </h2>
+                        <h2> Universities <a type="button" className="btn btn-success" href="#" role="button" onClick={() => setModalIsOpen(true)}> Add New </a> </h2>
                         {uniList}
                     </div>
                 </Col>
@@ -90,17 +72,17 @@ function Universities(props) {
                                 <div>
                                     New University
                                 </div>
-                                <Form.Control placeholder="University Name" value={uni}/>
-                                <Form.Control as="textarea"placeholder="Description" rows={3} />
-                                <Form.Control placeholder="Number of Students" value=""/>
-                                <Form.Control name="locationName" placeholder="Location Name" value=""/>
+                                <Form.Control placeholder="University Name" name="uni_name" value={newUni.uni_name} onChange={handleNewUniChange}/>
+                                <Form.Control as="textarea"placeholder="Description" rows={3} name="description" value={newUni.description} onChange={handleNewUniChange} />
+                                <Form.Control placeholder="Number of Students" name="studentCount" value={newUni.studentCoungt} onChange={handleNewUniChange}/>
+                                <Form.Control name="locationName" placeholder="Location Name" name="location_name" value={newUni.location_name} onChange={handleNewUniChange}/>
                                     <Form.Row>
                                         <Form.Group as={Col}>
-                                        <Form.Control name="latitude" placeholder="latitude" value="" />
+                                        <Form.Control name="latitude" placeholder="latitude" name="latitude" value={newUni.latitude} onChange={handleNewUniChange} />
                                         </Form.Group>
 
                                         <Form.Group as={Col} >
-                                        <Form.Control name="longitude" placeholder="longitude" value=""/>
+                                        <Form.Control name="longitude" placeholder="longitude" name="longitude" value={newUni.longitude} onChange={handleNewUniChange}/>
                                         </Form.Group>
                                     </Form.Row>
                                     <Form.File id="formcheck-api-custom" custom>
@@ -124,20 +106,15 @@ function Universities(props) {
     );
 }
 
-function Uni({data, openModal}) {
+function Uni({data}) {
     return(
         <div className="cardDiv card-elevation3">
             <Card>
-            <Card.Header as="h5">{data.rso_name}</Card.Header>
+            <Card.Header as="h5">{data.uni_name}</Card.Header>
             <Card.Body>
-                <Card.Title>Short organization information</Card.Title>
+                <Card.Title></Card.Title>
                 <Card.Text>
-                
-                {data.isAdmin
-                ? <button type="button" className="btn btn-success cardbtn" onClick={openModal}> Create New Event</button>
-                : (data.isMember 
-                    ? <p className="cardJoined">Joined</p>
-                    : <button type="button" className="btn btn-success cardbtn">Join</button>)}
+                    {data.description}
                 </Card.Text>
             </Card.Body>
             </Card>

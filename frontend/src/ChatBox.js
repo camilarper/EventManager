@@ -48,13 +48,12 @@ class ChatBox extends Component {
   }
 
   render() {
-    const loadingSpin = this.state.loading ? "App-logo Spin" : "App-logo";
     return (
       <div >
 
         <div className="row">
           <div className="col-4  pt-3 border-right">
-            <h6>Say something about React</h6>
+            <h6>Say something about Event</h6>
             <CommentForm addComment={this.addComment} />
           </div>
           <div className="col-8  pt-3 bg-white">

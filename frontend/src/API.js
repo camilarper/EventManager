@@ -9,7 +9,7 @@ if (!window.db) {
             user_id: 1,
             username: "superAdmin", 
             user_pw: "superPass", 
-            name: "Super Admin User", 
+            full_name: "Super Admin User", 
             university_id: "",
             email: "", 
             user_type: 1
@@ -17,7 +17,7 @@ if (!window.db) {
             user_id: 2,
             username: "saida", 
             user_pw: "saidaPass", 
-            name: "saida", 
+            full_name: "saida", 
             university_id: 3,
             email: "saida@usf.edu", 
             user_type: 0
@@ -25,7 +25,7 @@ if (!window.db) {
             user_id: 3,
             username: "camila", 
             user_pw: "camilaPass", 
-            name: "Camila", 
+            full_name: "Camila", 
             university_id: 1,
             email: "camila@knights.ucf.edu", 
             user_type: 0
@@ -33,7 +33,7 @@ if (!window.db) {
             user_id: 4,
             username: "ana", 
             user_pw: "anaPass", 
-            name: "Ana", 
+            full_name: "Ana", 
             university_id: 2,
             email: "ana@fiu.edu", 
             user_type: 0}],
@@ -95,7 +95,7 @@ if (!window.db) {
             university_id: 1,
             uni_name: "UCF",
             location_id: 1,
-            description: "University of Central Florida"
+            description: "University of Central Florida",
         }, {
             university_id: 2,
             uni_name: "FIU",
@@ -116,7 +116,7 @@ if (!window.db) {
 }
 
 function API() {
-    const api_url = "http://ec2-54-234-164-147.compute-1.amazonaws.com:3000/";
+    //const api_url = "http://ec2-54-234-164-147.compute-1.amazonaws.com:3000/";
 
     function matches(str1, str2){
         return str1 && str2 && str1.toLowerCase()==str2.toLowerCase();
@@ -132,23 +132,23 @@ function API() {
     }
 
     async function authenticate(user){
-        return axios.get(api_url + "authenticate", user);
-        // window.db.currentUser = window.db.User.find(x => matches(x.username, credentials.username) && x.user_pw === credentials.user_pw);
-        // return window.db.currentUser;
+        //return axios.get(api_url + "authenticate", user);
+         window.db.currentUser = window.db.User.find(x => matches(x.username, user.username) && x.user_pw === user.user_pw);
+         return window.db.currentUser;
     }
 
     async function register(user){   
-        return axios.post(api_url + "create-account", {...user, user_type: 0});
+        //return axios.post(api_url + "create-account", {...user, user_type: 0});
         
-        // var newUser = { ...user, user_id: window.db.User.length + 1, user_type: 0};
-        // window.db.User.push(newUser);
-        // window.db.currentUser = newUser;
-        // return newUser;
+        var newUser = { ...user, user_id: window.db.User.length + 1, user_type: 0};
+        window.db.User.push(newUser);
+        window.db.currentUser = newUser;
+        return newUser;
     }
 
     async function joinRso(rso_member){
-        return axios.post(api_url + "add_user_to_rso", rso_member);
-        //window.db.RSO_Member.push({...rso_member, rso_member_id: window.db.RSO_Member.length + 1})
+        //return axios.post(api_url + "add_user_to_rso", rso_member);
+        window.db.RSO_Member.push({...rso_member, rso_member_id: window.db.RSO_Member.length + 1})
     }
 
     async function getUsersFromUni(university_id){
@@ -193,9 +193,22 @@ function API() {
         return fullOrg;
     }
 
-        async function createUni(newUni) {
-        
-        return [];
+    async function createUni(newUni) {
+        var location = {
+            location_id: window.db.Location.length + 1,
+            location_name: newUni.locationName,
+            longitud: newUni.longitud,
+            latitude: newUni.latitude
+        }
+        window.db.Location.push(location);
+
+        var fullUni = {
+            ...newUni, 
+            university_id: window.db.University.length + 1,
+            location_id: location.location_id
+        };
+        window.db.University.push(fullUni);
+        return fullUni;
     }
 
     async function getEvents(filter){
@@ -248,10 +261,18 @@ function API() {
     }
 
     async function getUniversity(university_id){
+        await loadData();
         return window.db.University[university_id - 1];
     }
     async function getUser(user_id){
+        await loadData();
         return window.db.User[user_id - 1];
+    }
+    async function getEvent(event_id){
+        await loadData();
+        var event = window.db.Event[event_id - 1]
+        var location = window.db.Location[event.location_id - 1]
+        return {...event, location};
     }
     // async function getOrganization(rso_id){
     //     return window.db.RSO[rso_id - 1];
@@ -288,7 +309,7 @@ function API() {
                     var org = window.db.RSO[i % 3];
                     var univ = window.db.University[org.university_id - 1];
                     var ev = {
-                        event_id: x.id,
+                        event_id: i + 1,
                         event_name: x.title,
                         description: x.description,
                         event_type: x.category,
@@ -328,6 +349,7 @@ function API() {
         getUsersFromUni,
         
         //getUser,
+        getEvent,
         getUniversity,
         //getOrganization
     }
