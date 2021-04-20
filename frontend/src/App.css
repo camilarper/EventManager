@@ -212,8 +212,12 @@ span.caret {
   margin-top: 5%;
 }
 .infoCard{
-  height:90%;
+  height:95%;
 }
 .infoCardContent{
   height:100%;
+}
+.eventInfoBody{
+  overflow-y: auto;
+  height: 100%;
 }

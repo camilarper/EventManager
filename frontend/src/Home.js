@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {BrowserRouter as Router, NavLink, Route, Switch} from 'react-router-dom';
 import axios from 'axios';
 import { InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -128,7 +129,7 @@ function Event({data}) {
                 {/*<div dangerouslySetInnerHTML={{ __html:data.description}} />*/}
                 Event Date: -
                 {data.date}
-                <a type="button" className="btn btn-primary cardbtn" href={"/EventInfo/"+ data.event_id}> Event Details </a>
+                <NavLink exact className="btn btn-primary cardbtn" to={"/EventInfo/"+ data.event_id}> Event Details </NavLink>
                 </Card.Text>
             </Card.Body>
             </Card>

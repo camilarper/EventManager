@@ -28,8 +28,8 @@ function EventInfo(props) {
                 <div className="cardDiv card-elevation3 infoCard">
                     <Card className="infoCardContent">
                         <Card.Header><h1>{event.event_name} </h1></Card.Header>
-                    <Card.Body>
-                        <p><div dangerouslySetInnerHTML={{ __html:event.description}} /></p>
+                    <Card.Body className="eventInfoBody">
+                        <div dangerouslySetInnerHTML={{ __html:event.description}} />
                         <p><b>Date and Time:</b> {event.date} </p>
                         {event.location?
                         <p><b>Location:</b>  {event.location.location_name} </p>:""}
@@ -38,19 +38,19 @@ function EventInfo(props) {
                     </Card>
                 </div>
              </Col>
-            
+            {props.user.full_name ?
             <Col sm={6} className = "col-results">
-                <div className="event-wrapper">
+                <div className="infoCardContent">
                     <div className="cardDiv card-elevation3 infoCard">
                     <Card className="infoCardContent">
                     <Card.Header><h2> Reviews </h2></Card.Header>
                     <Card.Body>
-                        <ChatBox/>
+                        <ChatBox user={props.user} event_id={event.event_id}/>
                     </Card.Body>
                     </Card>
                 </div>
                 </div>
-            </Col>
+            </Col> : "" }
         </Row>
     </Container>
 

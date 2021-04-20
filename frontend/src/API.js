@@ -40,17 +40,17 @@ if (!window.db) {
 
         Location: [{
             location_id: 1,
-            location_name: "UCF",
+            location_name: "University of Central Florida",
             longitud: -81.200608,
             latitude: 28.601391,
         },{
             location_id: 2,
-            location_name: "FIU",
+            location_name: "Florida International University",
             longitud: -80.3733,
             latitude: 25.7574,
         },{
             location_id: 3,
-            location_name: "USF",
+            location_name: "University of South Florida",
             longitud: 82.4139,
             latitude: 28.0587,
         }],
@@ -93,20 +93,24 @@ if (!window.db) {
 
         University: [{
             university_id: 1,
-            uni_name: "UCF",
+            uni_name: "University of Central Florida",
             location_id: 1,
-            description: "University of Central Florida",
+            description: "The University of Central Florida is a public research university in unincorporated Orange County, Florida. It is part of the State University System of Florida. With almost 72,000 students, it currently has the largest student body in the United States.",
         }, {
             university_id: 2,
-            uni_name: "FIU",
+            uni_name: "Florida International university",
             location_id:2,
-            description: "Florida International university",
+            description: "Florida International University is a public research university with its main campus in University Park, Florida. It is part of the State University System of Florida and has been designated as having Emerging Preeminence.",
         }, {
             university_id: 3,
-            uni_name: "USF",
+            uni_name: "University of South Florida",
             location_id: 3,
-            description: "University of South Florida"
+            description: "The University of South Florida is a public research university with campuses in Tampa, St. Petersburg, and Sarasota, Florida; with the main campus located in Tampa. It is one of 12 members of the State University System of Florida."
         }],
+
+        Review: [
+
+        ],
         
         loaded: false,
         Categories: ["Public", "University", "RSO"],
@@ -211,6 +215,14 @@ function API() {
         return fullUni;
     }
 
+    
+    async function addReview(review){
+        var fullReview = {...review, review_id: window.db.Review.length + 1, timestamp: Date.now};
+        window.db.Review.push(fullReview);
+        fullReview.user = window.db.User[review.user_id - 1];
+        return fullReview;
+    }
+
     async function getEvents(filter){
         var result = window.db.Event.filter(evt => {
             var rso = window.db.RSO[evt.rso_id - 1];
@@ -253,6 +265,13 @@ function API() {
     async function getCategories(){
         await loadData();
         return window.db.Event_types;
+    }
+    
+    async function getReviews(event_id){
+        await loadData();
+        return window.db.Review
+        .filter(x => x.event_id == event_id)
+        .map(x => {return {...x, user: window.db.User[x.user_id - 1]}});
     }
     
     async function getUniversities(){
@@ -341,17 +360,19 @@ function API() {
         createOrg,
         createUni,
         joinRso,
+        addReview,
 
         getEvents,
         getCategories,
         getOrgs,
         getUniversities,
         getUsersFromUni,
+        getReviews,
         
         //getUser,
         getEvent,
         getUniversity,
-        //getOrganization
+        //getOrganization,      
     }
 }
 
