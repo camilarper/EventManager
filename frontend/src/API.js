@@ -12,7 +12,8 @@ if (!window.db) {
             full_name: "Super Admin User", 
             university_id: "",
             email: "", 
-            user_type: 1
+            user_type: 1,
+            student_id: "021567"
         },{
             user_id: 2,
             username: "saida", 
@@ -20,7 +21,8 @@ if (!window.db) {
             full_name: "saida", 
             university_id: 3,
             email: "saida@usf.edu", 
-            user_type: 0
+            user_type: 0,
+            student_id: "021437"
         },{
             user_id: 3,
             username: "camila", 
@@ -28,7 +30,8 @@ if (!window.db) {
             full_name: "Camila", 
             university_id: 1,
             email: "camila@knights.ucf.edu", 
-            user_type: 0
+            user_type: 0,
+            student_id: "021553"
         },{
             user_id: 4,
             username: "ana", 
@@ -36,7 +39,63 @@ if (!window.db) {
             full_name: "Ana", 
             university_id: 2,
             email: "ana@fiu.edu", 
-            user_type: 0}],
+            user_type: 0,
+            student_id: "012567"
+        },{
+            user_id: 5,
+            username: "daniel", 
+            user_pw: "danielPass", 
+            full_name: "Daniel", 
+            university_id: 1,
+            email: "daniel@knights.ucf.edu", 
+            user_type: 0,
+            student_id: "021453"
+        },{
+            user_id: 6,
+            username: "jose", 
+            user_pw: "josePass", 
+            full_name: "Jose", 
+            university_id: 1,
+            email: "jose@knights.ucf.edu", 
+            user_type: 0,
+            student_id: "021253"
+        },{
+            user_id: 7,
+            username: "luis", 
+            user_pw: "luisPass", 
+            full_name: "Luis", 
+            university_id: 1,
+            email: "luis@knights.ucf.edu", 
+            user_type: 0,
+            student_id: "021543"
+        },{
+            user_id: 8,
+            username: "angel", 
+            user_pw: "angelPass", 
+            full_name: "Angel", 
+            university_id: 1,
+            email: "angel@knights.ucf.edu", 
+            user_type: 0,
+            student_id: "021593"
+        },{
+            user_id: 9,
+            username: "matt", 
+            user_pw: "mattPass", 
+            full_name: "Matt", 
+            university_id: 1,
+            email: "matthew@knights.ucf.edu", 
+            user_type: 0,
+            student_id: "021551"
+        },{
+            user_id: 3,
+            username: "laura", 
+            user_pw: "LauraPass", 
+            full_name: "Laura", 
+            university_id: 1,
+            email: "laura@knights.ucf.edu", 
+            user_type: 0,
+            student_id: "021503"
+        }],
 
         Location: [{
             location_id: 1,
@@ -59,22 +118,52 @@ if (!window.db) {
 
         RSO: [{
             rso_id: 1,
-            university_id: 1,
+            university_id: 2,
             rso_name: "Delta Sigma Phi",
             admin_id: 3,
-            description:"description Delta",
+            description:"Delta Sigma Phi, commonly known as Delta Sig or D Sig, is a fraternity established in 1899 at The City College of New York. It was the first fraternity to be founded on the basis of religious and ethnic acceptance. ",
         },{
             rso_id: 2,
-            university_id: 2,
-            rso_name: "ZBT",
+            university_id: 1,
+            rso_name: "Zeta Beta Tau",
             admin_id: 4,
-            description:"description ZBT",
+            description:"Zeta Beta Tau is a Greek-letter social fraternity based in North America. It was founded on December 29, 1898, at City College of New York and is recognized as the first Jewish collegiate social fraternity.",
         },{
             rso_id: 3,
-            university_id: 3,
-            rso_name: "SHPE",
+            university_id: 1,
+            rso_name: "Society of Hispanics Professional Engineers",
             admin_id: 1,
-            description:"description SHPE",
+            description:"The Society of Hispanic Professional Engineers was founded in Los Angeles, California in 1974 by a group of engineers employed by the city of Los Angeles. Their objective was to form a national organization of professional engineers to serve as role models in the Hispanic community.",
+        },{
+            rso_id: 4,
+            university_id: 1,
+            rso_name: "Knights Capital Fund",
+            admin_id: 3,
+            description:"The mission of Knights Capital Fund is to provide its members with a detailed and engaging education of investment management.",
+        },{
+            rso_id: 5,
+            university_id: 2,
+            rso_name: "Artificial Intelligence",
+            admin_id: 4,
+            description:"Serves as a place of community for discussing, learning about, and working on topics related to machine learning and artificial intelligence across disciplines. Meeting activities include discussions of current events in AI, professor talks, tutorials, and workshops.",
+        },{
+            rso_id: 6,
+            university_id: 2,
+            rso_name: "Italian Club",
+            admin_id: 1,
+            description:"The mission of the Italian Club at UCF is to promote a fun and comfortable learning environment for all students studying, or interested in, the Italian language and culture.",
+        },{
+            rso_id: 7,
+            university_id: 1,
+            rso_name: "Knights Hack",
+            admin_id: 3,
+            description:"The goal of Knight Hacks is to develop computer science skills among students and to build an appreciation for real-world uses of the field.",
+        },{
+            rso_id: 8,
+            university_id: 2,
+            rso_name: "Robotics",
+            admin_id: 4,
+            description:"At robotics competitions, teams of students must design and build a robot that can compete against opponents in a series of specific challenges.",
         }],
 
         RSO_Member: [{
@@ -103,17 +192,42 @@ if (!window.db) {
             description: "Florida International University is a public research university with its main campus in University Park, Florida. It is part of the State University System of Florida and has been designated as having Emerging Preeminence.",
         }, {
             university_id: 3,
-            uni_name: "University of South Florida",
+            uni_name: "University of Florida",
             location_id: 3,
-            description: "The University of South Florida is a public research university with campuses in Tampa, St. Petersburg, and Sarasota, Florida; with the main campus located in Tampa. It is one of 12 members of the State University System of Florida."
+            description: "University of Florida is an educational and research institution. The institute provides associate, bachelors, masters, doctoral, and professional degrees in the languages, arts, sciences, engineering, media, distance education, and part time programs. University of Florida was founded in 1853 and is based in Gainesville, Florida."
+        },{
+            university_id: 4,
+            uni_name: "Florida State University",
+            location_id: 4,
+            description: "Home to the Florida State Seminoles, Florida State University offers more than 300 undergraduate, graduate, and professional programs, including M.D. (medicine) and J.D. (law) programs. The educational institution has 16 colleges dedicated to academic fields ranging from liberal arts, music, visual arts, and education, to criminology, engineering, social work, and information.",
+        }, {
+            university_id: 5,
+            uni_name: "University of Miami",
+            location_id:5,
+            description: "The University of Miami is an educational and research institution that includes the Rosenstiel School of Marine and Atmospheric Science, the Medical Campus, the John J. Koubek Center, and the James L. Knight Center. The university offers certificates, bachelors, masters, doctoral, first professional, post-masters, and post-bachelors degrees.",
         }],
 
-        Review: [
+        Review: [{
+            review_id: 1,
+            user_id: 4,
+            event_id: 1,
+            comment: "Great event!",
+        },{
+            review_id: 2,
+            user_id: 2,
+            event_id: 1,
+            comment: "Don't forget your mask!",
+        },{
+            review_id: 3,
+            user_id: 3,
+            event_id: 1,
+            comment: "I will be there",
+        }
 
         ],
         
         loaded: false,
-        Categories: ["Public", "University", "RSO"],
+        Categories: ["Public", "Private", "RSO"],
         currentUser: {},
         Event_types: []
     }

@@ -38,7 +38,7 @@ function EventInfo(props) {
                     </Card>
                 </div>
              </Col>
-            {props.user.full_name ?
+            {props.user.full_name && event.event_id ?
             <Col sm={6} className = "col-results">
                 <div className="infoCardContent">
                     <div className="cardDiv card-elevation3 infoCard">

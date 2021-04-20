@@ -9,7 +9,7 @@ import API from './API';
 
 
 function Signup(props) {
-    const initialState = { username: '', user_pw: '', full_name: '', university_id: '', email: '' }
+    const initialState = { username: '', user_pw: '', full_name: '', university_id: '', email: '', student_id: '' }
     const [User, setSignup] = useState(initialState) 
     const [uniList, setUniList] = useState([]);
 
@@ -36,23 +36,6 @@ function Signup(props) {
                 console.log("Error Authenticating " + User)
             }
         });
-        // props.register 
-        // ? axios.post("http://ec2-54-234-164-147.compute-1.amazonaws.com:3000/create-account", User)
-        //     .then((response)=>{
-        //         console.log(response.data);
-        //         props.setUser(response.data);
-        //         props.history.push('/');
-        //     }, (error)=> {
-        //         console.log(error);
-        //     }) 
-        // : axios.post("http://ec2-54-234-164-147.compute-1.amazonaws.com:3000/authenticate", User) 
-        //     .then((response)=>{
-        //         console.log(response);
-        //         props.setUser(response.data);
-        //         props.history.push('/');
-        //     }, (error)=> {
-        //         console.log(error);
-        //     }) ;
         
     }
     
@@ -77,6 +60,8 @@ function Signup(props) {
                                     {props.register?
                                     <div>
                                         <Form.Control name="full_name" placeholder="Your name" rows="1" value={setSignup.content} onChange={handleChange} className="form-control" />
+                                        <br/>
+                                        <Form.Control name="student_id" placeholder="student ID" rows="1" value={setSignup.content} onChange={handleChange} className="form-control" />
                                         <br/>
                                         <Form.Control as="select" name="university_id" value={setSignup.content} onChange={handleChange}  className="form-control">
                                             <option value="">Select University</option>

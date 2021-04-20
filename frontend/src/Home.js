@@ -127,8 +127,7 @@ function Event({data}) {
                 Location: {data.loc.location_name}
                 <br/>
                 {/*<div dangerouslySetInnerHTML={{ __html:data.description}} />*/}
-                Event Date: -
-                {data.date}
+                Event Date: {data.date}
                 <NavLink exact className="btn btn-primary cardbtn" to={"/EventInfo/"+ data.event_id}> Event Details </NavLink>
                 </Card.Text>
             </Card.Body>
